@@ -1,0 +1,4 @@
+apiVersion: v2
+name: user-app
+description: A Helm chart for deploying a user app to EKS
+version: 0.1.0
