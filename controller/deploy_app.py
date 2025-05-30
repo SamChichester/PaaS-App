@@ -49,9 +49,14 @@ def deploy_with_helm(app_name: str, image: str, port: int) -> None:
     print(f"[INFO] Deploying {app_name} with Helm.")
     subprocess.run([
         "helm", "upgrade", "--install", app_name, "./charts/user-app",
-        f"--set=image={image}"
+        f"--set=image={image}",
         f"--set=port={port}"
     ], check=True)
+
+def ecr_login(region: str, registry_id: str) -> None:
+    print(f"[INFO] Logging into ECR registry {registry_id}...")
+    cmd = f"aws ecr get-login-password --region {region} | docker login --username AWS --password-stdin {registry_id}.dkr.ecr.{region}.amazonaws.com"
+    subprocess.run(cmd, shell=True, check=True)
 
 def main(git_url: str) -> None:
     repo_path = clone_repo(git_url)
@@ -61,6 +66,8 @@ def main(git_url: str) -> None:
     image_build = config.get("image_build", True)
     port = config.get("port", 80)
     image_tag = str(uuid.uuid4())[:8]
+
+    ecr_login("us-east-1", "597807258698")
 
     if image_build:
         image = build_and_push_image(repo_path, app_name, image_tag)
