@@ -50,7 +50,9 @@ def deploy_with_helm(app_name: str, image: str, port: int) -> None:
     subprocess.run([
         "helm", "upgrade", "--install", app_name, "./charts/user-app",
         f"--set=image={image}",
-        f"--set=port={port}"
+        f"--set=port={port}",
+        f"--set=ingress.enabled=true",
+        f"--set=ingress.host={app_name}.paas.samchichester.com"
     ], check=True)
 
 def ecr_login(region: str, registry_id: str) -> None:

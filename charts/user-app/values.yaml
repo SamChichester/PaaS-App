@@ -1,3 +1,10 @@
 image: nginx:latest
 port: 80
 replicaCount: 1
+
+ingress:
+  enabled: true
+  host: paas.eks.samchichester.com
+
+service:
+  port: 80
