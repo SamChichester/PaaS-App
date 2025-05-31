@@ -1,8 +1,10 @@
 import os
 import subprocess
-from flask import Flask, redirect, url_for, request, jsonify
+from flask import Flask, redirect, request, jsonify
 from flask_dance.contrib.github import make_github_blueprint, github
+from flask_dance.consumer import oauth_authorized
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,11 +12,15 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ["FLASK_SECRET_KEY"]
 login_manager = LoginManager(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 github_bp = make_github_blueprint(
     client_id=os.environ["GITHUB_CLIENT_ID"],
     client_secret=os.environ["GITHUB_CLIENT_SECRET"],
-    scope="repo"
+    scope="repo",
+    redirect_url="/github/finish"
 )
 app.register_blueprint(github_bp, url_prefix="/login")
 
@@ -55,13 +61,23 @@ def deploy():
         "returncode": result.returncode
     }
 
-@app.route("/login/github/callback")
-def github_login_callback():
+@app.route("/github/finish")
+def github_finish():
     if not github.authorized:
-        return redirect(url_for("github.login"))
-    account_info = github.get("/user").json()
-    login_user(User(account_info["login"]))
+        return redirect("/")
+
+    resp = github.get("/user")
+    if not resp.ok:
+        return "Failed to fetch user info from GitHub.", 400
+    github_info = resp.json()
+    login_user(User(github_info["login"]))
+
     return redirect("http://localhost:5173/dashboard")
+
+
+@oauth_authorized.connect_via(github_bp)
+def github_logged_in(blueprint, token):
+    print(f"OAuth token received: {token}")
 
 @app.route("/logout")
 def logout():

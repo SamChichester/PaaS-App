@@ -37,6 +37,7 @@ export default {
   methods: {
     async checkAuth() {
       const response = await axios.get("http://localhost:5000/me", { withCredentials: true })
+      console.log(response)
       this.authorized = response.data.authorized
       if (this.authorized) {
         this.username = response.data.username
@@ -44,7 +45,7 @@ export default {
       }
     },
     login() {
-      window.location.href = "http://localhost:5000/login/github"
+      window.location.href = "http://localhost:5000/login/github?next=http://localhost:5173"
     },
     logout() {
       window.location.href = "http://localhost:5000/logout"
