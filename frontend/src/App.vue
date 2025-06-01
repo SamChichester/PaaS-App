@@ -57,7 +57,7 @@ export default {
     async deploy(repoUrl) {
       const response = await axios.post(
         "http://localhost:5000/deploy",
-        { repoUrl: repoUrl },
+        { repo_url: repoUrl },
         { withCredentials: true }
       )
       this.output = response.data.stdout || response.data.stderr

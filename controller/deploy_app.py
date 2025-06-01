@@ -48,7 +48,7 @@ def build_and_push_image(repo_path: str, app_name: str, tag: str) -> str:
 def deploy_with_helm(app_name: str, image: str, port: int) -> None:
     print(f"[INFO] Deploying {app_name} with Helm.")
     subprocess.run([
-        "helm", "upgrade", "--install", app_name, "./charts/user-app",
+        "helm", "upgrade", "--install", app_name, "../charts/user-app",
         f"--set=image={image}",
         f"--set=port={port}",
         f"--set=ingress.enabled=true",
