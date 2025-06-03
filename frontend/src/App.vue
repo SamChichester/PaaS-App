@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     async checkAuth() {
-      const response = await axios.get("http://localhost:5000/me", { withCredentials: true })
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/me`, { withCredentials: true })
       console.log(response)
       this.authorized = response.data.authorized
       if (this.authorized) {
@@ -45,18 +45,18 @@ export default {
       }
     },
     login() {
-      window.location.href = "http://localhost:5000/login/github?next=http://localhost:5173"
+      window.location.href = `${import.meta.env.VITE_API_URL}/login/github?next=${import.meta.env.VITE_APP_URL}`
     },
     logout() {
-      window.location.href = "http://localhost:5000/logout"
+      window.location.href = `${import.meta.env.VITE_API_URL}/logout`
     },
     async fetchRepos() {
-      const response = await axios.get("http://localhost:5000/repos",  { withCredentials: true })
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/repos`,  { withCredentials: true })
       this.repos = response.data
     },
     async deploy(repoUrl) {
       const response = await axios.post(
-        "http://localhost:5000/deploy",
+        `${import.meta.env.VITE_API_URL}/deploy`,
         { repo_url: repoUrl },
         { withCredentials: true }
       )
