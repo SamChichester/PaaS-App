@@ -1,6 +1,6 @@
 import os
 import subprocess
-from flask import Flask, redirect, request, jsonify
+from flask import Flask, redirect, request, jsonify, session
 from flask_dance.contrib.github import make_github_blueprint, github
 from flask_dance.consumer import oauth_authorized
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
@@ -82,4 +82,6 @@ def github_logged_in(blueprint, token):
 @app.route("/logout")
 def logout():
     logout_user()
-    return redirect("/")
+    token_key = f"github_oauth_token"
+    session.pop(token_key, None)
+    return redirect("http://localhost:5173")
