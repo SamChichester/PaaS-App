@@ -14,7 +14,7 @@
       <div v-else>
         <h2>Welcome, {{ username }}</h2>
         <h3 class="mb-3">Your Repositories:</h3>
-        <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+        <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-4">
           <li v-for="repo in repos" :key="repo.id" class="p-4 bg-gray-100 rounded shadow shadow-md transition">
             <div class="font-semibold mb-2 flex items-center justify-between">
               <span>{{ repo.name }}</span>
