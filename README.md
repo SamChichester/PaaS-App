@@ -1,5 +1,12 @@
 # PaaS App
 
+## Table Of Contents
+
+- [About](#about)
+- [Commands](#commands)
+
+## About
+
 This is a project I am doing to get familiar with Terraform, Kubernetes, and AWS EKS.
 
 ## Commands
